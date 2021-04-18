@@ -16,9 +16,8 @@ client.on('message', message => {
 			.setTitle('Error')
 			.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 			.setDescription('A unexpected error occurred. Contact yum yum chicken yum yum#2288 for help.')
-			.setThumbnail('https://discord.com/assets/468644ef0a79a3d8163f7778164b756d.svg')
 			.setTimestamp()
-			.setFooter('General Chemistry II Spring 2021 (CHEM-UA-126)\nRequested by: ' + message.author.tag);
+			.setFooter(process.env.class + '\nRequested by: ' + message.author.tag);
 		(async () => {
 			console.log('Processing request for: ' + message.author.tag);
 			const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
@@ -64,6 +63,7 @@ client.on('message', message => {
 					assignmentsDueSoon.push(assignments[assignments.indexOf(e)]);
 				}
 			});
+			browser.close();
 		})().then(() => {
 			if (assignmentsDueSoon.length == 0) {
 				const assignmentsDue = new discordjs.MessageEmbed()
@@ -71,9 +71,8 @@ client.on('message', message => {
 					.setTitle('Assignments due in the next 7 days')
 					.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 					.setDescription('There are no assignments due in the next 7 days.')
-					.setThumbnail('https://discord.com/assets/468644ef0a79a3d8163f7778164b756d.svg')
 					.setTimestamp()
-					.setFooter('General Chemistry II Spring 2021 (CHEM-UA-126)\nRequested by: ' + message.author.tag);
+					.setFooter(process.env.class + '\nRequested by: ' + message.author.tag);
 				try {
 					message.channel.send(assignmentsDue);
 				}
@@ -90,9 +89,8 @@ client.on('message', message => {
 					.setDescription(assignmentsDueSoon.map(e => {
 						return assignmentsDueSoon[assignmentsDueSoon.indexOf(e)].join(' · ');
 					}).join('\n'))
-					.setThumbnail('https://discord.com/assets/468644ef0a79a3d8163f7778164b756d.svg')
 					.setTimestamp()
-					.setFooter('General Chemistry II Spring 2021 (CHEM-UA-126)\nRequested by: ' + message.author.tag);
+					.setFooter(process.env.class + '\nRequested by: ' + message.author.tag);
 				try {
 					message.channel.send(assignmentsDue);
 				}
@@ -108,9 +106,8 @@ client.on('message', message => {
 			.setTitle('Help Menu')
 			.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 			.setDescription('A discord bot to quickly retrieve the status of assignments.')
-			.setThumbnail('https://discord.com/assets/468644ef0a79a3d8163f7778164b756d.svg')
 			.setTimestamp()
-			.setFooter('General Chemistry II Spring 2021 (CHEM-UA-126)\nMade by yum yum chicken yum yum#2288')
+			.setFooter(process.env.class + '\nMade by yum yum chicken yum yum#2288')
 			.addFields(
 				{ name: '!connect soon', value: 'Gathers the assignments due in the next 7 days.' },
 				{ name: '!connect/!connect help', value: 'Provides information about the bot' },
