@@ -21,7 +21,7 @@ client.on('message', message => {
 			.setFooter('General Chemistry II Spring 2021 (CHEM-UA-126)\nRequested by: ' + message.author.tag);
 		(async () => {
 			console.log('Processing request for: ' + message.author.tag);
-			const browser = await puppeteer.launch({args: ['--no-sandbox']});
+			const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
 			const page = await browser.newPage();
 			await page.goto('https://newconnect.mheducation.com/');
 			await page.waitForNavigation({ waitUntil: 'networkidle0' });
@@ -59,7 +59,7 @@ client.on('message', message => {
 				e.push(dueDates[assignments.indexOf(e)]);
 			});
 			assignments.forEach(e => {
-				if (Date.parse(assignments[assignments.indexOf(e)][1]) < Date.now()) {
+				if (Date.parse(assignments[assignments.indexOf(e)][1]) > Date.now()) {
 					assignments[assignments.indexOf(e)][0] = assignments[assignments.indexOf(e)][0];
 					assignmentsDueSoon.push(assignments[assignments.indexOf(e)]);
 				}
