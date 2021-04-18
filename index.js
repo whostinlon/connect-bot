@@ -1,7 +1,6 @@
 const discordjs = require('discord.js');
 const client = new discordjs.Client();
 const puppeteer = require('puppeteer');
-const config = require('./constants.json');
 const newLineSelect = /(\n|\r)(Assignment)/i;
 const dateSelect = /((Start:)\W+(\w{3}) (\d{1,2},) (\d{4}) (\w{2}) (\d{1,2}:\d{2} \w{2} \w{3})\W+)?(Due:)\W+/i;
 
