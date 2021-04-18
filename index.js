@@ -21,7 +21,7 @@ client.on('message', message => {
 			.setFooter('General Chemistry II Spring 2021 (CHEM-UA-126)\nRequested by: ' + message.author.tag);
 		(async () => {
 			console.log('Processing request for: ' + message.author.tag);
-			const browser = await puppeteer.launch();
+			const browser = await puppeteer.launch({args: ['--no-sandbox']});
 			const page = await browser.newPage();
 			await page.goto('https://newconnect.mheducation.com/');
 			await page.waitForNavigation({ waitUntil: 'networkidle0' });
