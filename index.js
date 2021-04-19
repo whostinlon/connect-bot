@@ -75,12 +75,13 @@ client.on('message', message => {
 					assignmentsDueSoon.push(assignments[assignments.indexOf(e)]);
 				}
 			});
-			browser.close();
+			await browser.close();
+			msg.edit(loading.setDescription('Cleaning up...'));
 			try {
-				msg.delete();
+				await msg.delete();
 			}
 			catch (error) {
-				message.channel.send(errorMessage.setDescription('A unexpected error occurred during cleaning up my messages (Do I have the permissions to delete my own messages?). Contact yum yum chicken yum yum#2288 or the server owner for help.'));
+				await message.channel.send(errorMessage.setDescription('A unexpected error occurred during cleaning up my messages (Do I have the permissions to delete my own messages?). Contact yum yum chicken yum yum#2288 or the server owner for help.'));
 			}
 		})().then(() => {
 			if (assignmentsDueSoon.length == 0) {
