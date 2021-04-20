@@ -1,11 +1,12 @@
 const discordjs = require('discord.js');
 const client = new discordjs.Client();
 const puppeteer = require('puppeteer');
+const constants = require('./constants.json')
 const newLineSelect = /(\n|\r)(Assignment)/i;
 const dateSelect = /((Start:)\W+(\w{3}) (\d{1,2},) (\d{4}) (\w{2}) (\d{1,2}:\d{2} \w{2} \w{3})\W+)?(Due:)\W+/i;
 let instanceRun = false;
 
-client.login(process.env.token);
+client.login(constants.token);
 client.once('ready', () => {
 	client.user.setPresence({ activity: { name: 'for !connect', type: 'WATCHING' }, status: 'dnd' });
 });
@@ -15,7 +16,7 @@ client.on('message', message => {
 		.setTitle('Error')
 		.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 		.setTimestamp()
-		.setFooter(process.env.class + '\nRequested by: ' + message.author.tag);
+		.setFooter(constants.class + '\nRequested by: ' + message.author.tag);
 	if (message.content === '!connect soon' && message.author.username != client.username && !instanceRun) {
 		if (message.channel.name != 'bot-commands' && message.channel.name != 'bots') {
 			message.channel.send(errorMessage.setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots'));
@@ -28,18 +29,18 @@ client.on('message', message => {
 				.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 				.setDescription('Starting up Connect instance...')
 				.setTimestamp()
-				.setFooter(process.env.class + '\nRequested by: ' + message.author.tag);
+				.setFooter(constants.class + '\nRequested by: ' + message.author.tag);
 			(async () => {
 				console.log('Processing request for: ' + message.author.tag);
+				const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
 				const msg = await message.channel.send(loading);
 				instanceRun = true;
-				const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
 				const page = await browser.newPage();
 				await page.goto('https://newconnect.mheducation.com/');
 				await page.waitForNavigation({ waitUntil: 'networkidle0' });
 				try {
-					await page.type('#login-email', process.env.email);
-					await page.type('#login-password', process.env.password);
+					await page.type('#login-email', constants.email);
+					await page.type('#login-password', constants.password);
 					console.log('Successfully typed in credentials.');
 					msg.edit(loading.setDescription('Authorization in progress...'));
 				}
@@ -81,7 +82,7 @@ client.on('message', message => {
 						assignmentsDueSoon.push(assignments[assignments.indexOf(e)]);
 					}
 				});
-				await browser.close();
+				await page.close();
 				instanceRun = false;
 				msg.edit(loading.setDescription('Cleaning up...'));
 				try {
@@ -98,7 +99,7 @@ client.on('message', message => {
 						.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 						.setDescription('There are no assignments due in the next 7 days.')
 						.setTimestamp()
-						.setFooter(process.env.class + '\nRequested by: ' + message.author.tag);
+						.setFooter(constants.class + '\nRequested by: ' + message.author.tag);
 					try {
 						message.channel.send(assignmentsDue);
 					}
@@ -116,7 +117,7 @@ client.on('message', message => {
 							return assignmentsDueSoon[assignmentsDueSoon.indexOf(e)].join(' · ');
 						}).join('\n'))
 						.setTimestamp()
-						.setFooter(process.env.class + '\nRequested by: ' + message.author.tag);
+						.setFooter(constants.class + '\nRequested by: ' + message.author.tag);
 					try {
 						message.channel.send(assignmentsDue);
 					}
@@ -134,7 +135,7 @@ client.on('message', message => {
 			.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 			.setDescription('Another process is running, please wait for that process to finish before submitting a new request.')
 			.setTimestamp()
-			.setFooter(process.env.class + '\nMade by yum yum chicken yum yum#2288');
+			.setFooter(constants.class + '\nMade by yum yum chicken yum yum#2288');
 		try {
 			message.channel.send(spamPrevent);
 		}
@@ -150,7 +151,7 @@ client.on('message', message => {
 				.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 				.setDescription('A discord bot to quickly retrieve the status of assignments.')
 				.setTimestamp()
-				.setFooter(process.env.class + '\nMade by yum yum chicken yum yum#2288')
+				.setFooter(constants.class + '\nMade by yum yum chicken yum yum#2288')
 				.addFields(
 					{ name: '!connect soon', value: 'Gathers the assignments due in the next 7 days.' },
 					{ name: '!connect/!connect help', value: 'Provides information about the bot' },
