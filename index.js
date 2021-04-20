@@ -3,6 +3,7 @@ const client = new discordjs.Client();
 const puppeteer = require('puppeteer');
 const newLineSelect = /(\n|\r)(Assignment)/i;
 const dateSelect = /((Start:)\W+(\w{3}) (\d{1,2},) (\d{4}) (\w{2}) (\d{1,2}:\d{2} \w{2} \w{3})\W+)?(Due:)\W+/i;
+let process = false;
 
 client.login(process.env.token);
 client.once('ready', () => {
@@ -15,7 +16,7 @@ client.on('message', message => {
 		.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 		.setTimestamp()
 		.setFooter(process.env.class + '\nRequested by: ' + message.author.tag);
-	if (message.content === '!connect soon' && message.author.username != client.username) {
+	if (message.content === '!connect soon' && message.author.username != client.username && !process) {
 		const assignmentsDueSoon = [];
 		const loading = new discordjs.MessageEmbed()
 			.setColor('#1873E8')
@@ -27,6 +28,7 @@ client.on('message', message => {
 		(async () => {
 			console.log('Processing request for: ' + message.author.tag);
 			const msg = await message.channel.send(loading);
+			process = true;
 			const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
 			const page = await browser.newPage();
 			await page.goto('https://newconnect.mheducation.com/');
@@ -76,6 +78,7 @@ client.on('message', message => {
 				}
 			});
 			await browser.close();
+			process = false;
 			msg.edit(loading.setDescription('Cleaning up...'));
 			try {
 				await msg.delete();
@@ -118,6 +121,21 @@ client.on('message', message => {
 				}
 			}
 		});
+	}
+	else if (message.content === '!connect soon' && message.author.username != client.username && process) {
+		const spamPrevent = new discordjs.MessageEmbed()
+			.setColor('#E21A23')
+			.setTitle('Spam Warning')
+			.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
+			.setDescription('Another process is running, please wait for that process to finish before submitting a new request.')
+			.setTimestamp()
+			.setFooter(process.env.class + '\nMade by yum yum chicken yum yum#2288');
+		try {
+			message.channel.send(spamPrevent);
+		}
+		catch (error) {
+			message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.'));
+		}
 	}
 	else if (message.content == '!connect help' || message.content == '!connect' && message.author.username != client.username) {
 		const helpMenu = new discordjs.MessageEmbed()
