@@ -14,33 +14,33 @@ const loading = new discordjs.MessageEmbed()
 	.setColor('#1873E8')
 	.setTitle('Loading Prompt')
 	.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
-	.setTimestamp();
+	.setTimestamp(Date.now());
 
 const errorMessage = new discordjs.MessageEmbed()
 	.setColor('#E21A23')
 	.setTitle('Error')
 	.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
-	.setTimestamp();
+	.setTimestamp(Date.now());
 
 const noAssignmentsDue = new discordjs.MessageEmbed()
 	.setColor('#008450')
 	.setTitle('Assignments due in the next 7 days')
 	.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 	.setDescription('There are no assignments due in the next 7 days.')
-	.setTimestamp();
+	.setTimestamp(Date.now());
 
 const assignmentsDue = new discordjs.MessageEmbed()
 	.setColor('#E21A23')
 	.setTitle('Assignments due in the next 7 days')
 	.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
-	.setTimestamp();
+	.setTimestamp(Date.now());
 
 const helpMenu = new discordjs.MessageEmbed()
 	.setColor('#E21A23')
 	.setTitle('Help Menu')
 	.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 	.setDescription('A discord bot to quickly retrieve the status of assignments.')
-	.setTimestamp()
+	.setTimestamp(Date.now())
 	.setFooter(process.env.class + '\nMade by yum yum chicken yum yum#2288')
 	.addFields(
 		{ name: '!connect soon', value: 'Gathers the assignments due in the next 7 days.' },
@@ -53,7 +53,7 @@ const spamPrevent = new discordjs.MessageEmbed()
 	.setTitle('Spam Warning')
 	.setAuthor('Connect Bot', 'https://www.mheducation.com/content/dam/mhe/webassets/og/MHE_logo.png', 'https://newconnect.mheducation.com/')
 	.setDescription('Another process is running, please wait for that process to finish before submitting a new request.')
-	.setTimestamp()
+	.setTimestamp(Date.now())
 	.setFooter(process.env.class + '\nMade by yum yum chicken yum yum#2288');
 
 /* Retrieves Assignments Due Soon */
