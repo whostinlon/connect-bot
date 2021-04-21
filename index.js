@@ -5,6 +5,7 @@ const puppeteer = require('puppeteer');
 /* Regex Expressions */
 const newLineSelect = /(\n|\r)(Assignment)/i;
 const dateSelect = /((Start:)\W+(\w{3}) (\d{1,2},) (\d{4}) (\w{2}) (\d{1,2}:\d{2} \w{2} \w{3})\W+)?(Due:)\W+/i;
+
 /* Spam Prevention */
 let instanceRun = false;
 
@@ -223,7 +224,7 @@ client.once('ready', () => {
 
 /* Discord Command Handling */
 client.on('message', message => {
-	if (message.content === '!connect soon' && message.author.username != client.username && !instanceRun) {
+	if (message.content == '!connect soon' && message.author.username != client.username && !instanceRun) {
 		if (message.channel.name != 'bot-commands' && message.channel.name != 'bots') {
 			message.channel.send(errorMessage.setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
@@ -232,7 +233,7 @@ client.on('message', message => {
 			retrieveAssignmentsDueSoon(message, assignmentsDueSoon).then(() => {
 				if (assignmentsDueSoon.length == 0) {
 					try {
-						message.channel.send(noAssignmentsDue.setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
+						message.channel.send(noAssignmentsDue.setTitle('Assignments Due in the next 7 Days').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
 					catch (error) {
 						message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
@@ -251,16 +252,17 @@ client.on('message', message => {
 			});
 		}
 	}
-	else if (message.content === '!connect all' && message.author.username != client.username && !instanceRun) {
+	else if (message.content == '!connect all' && message.author.username != client.username && !instanceRun) {
 		if (message.channel.name != 'bot-commands' && message.channel.name != 'bots') {
 			message.channel.send(errorMessage.setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
 		else {
 			const allAssignments = [];
+			instanceRun = false;
 			retrieveAllAssignments(message, allAssignments).then(() => {
 				if (allAssignments.length == 0) {
 					try {
-						message.channel.send(noAssignmentsDue.setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
+						message.channel.send(noAssignmentsDue.setTitle('Assignments Due in the Future').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
 					catch (error) {
 						message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
@@ -279,7 +281,7 @@ client.on('message', message => {
 			});
 		}
 	}
-	else if (message.content === '!connect soon' && message.author.username != client.username && instanceRun && (message.channel.name == 'bot-commands' || message.channel.name == 'bots')) {
+	else if (message.content == '!connect soon' && message.author.username != client.username && instanceRun && (message.channel.name == 'bot-commands' || message.channel.name == 'bots')) {
 		try {
 			message.channel.send(spamPrevent);
 		}
