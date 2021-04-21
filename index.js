@@ -86,7 +86,7 @@ async function retrieveAssignmentsDueSoon(message, assignmentsArray) {
 	try {
 		await page.click('#login-submit-btn');
 		console.log('Logging in....');
-		await page.waitForSelector('#iframewrapper > iframe');
+		await page.waitForSelector('#iframewrapper > iframe', { visible: true });
 		console.log('Successfully logged in!');
 		msg.edit(loading.setDescription('Successfully logged in...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 	}
@@ -97,7 +97,7 @@ async function retrieveAssignmentsDueSoon(message, assignmentsArray) {
 	}
 	const elementHandle = await page.$('#iframewrapper > iframe');
 	const frame = await elementHandle.contentFrame();
-	await frame.waitForSelector('#layoutWrapper > div > div > div > div.container-fluid.connect-assignment-container.connect-result-wrapper.set-aria-hidden > div > main > div > ul:nth-child(2)');
+	await frame.waitForSelector('#layoutWrapper > div > div > div > div.container-fluid.connect-assignment-container.connect-result-wrapper.set-aria-hidden > div > main > div > ul:nth-child(2)', { visible: true });
 	const assignmentsList = await frame.$$eval('#layoutWrapper > div > div > div > div.container-fluid.connect-assignment-container.connect-result-wrapper.set-aria-hidden > div > main > div > ul:nth-child(4) > li >  div.col-xs-11.assignment-title-container > div > div > div:nth-child(1) > div.assignment-title.inner-column-left > h3', el => el.map(e => e.innerText));
 	const dueDateList = await frame.$$eval('#layoutWrapper > div > div > div > div.container-fluid.connect-assignment-container.connect-result-wrapper.set-aria-hidden > div > main > div > ul:nth-child(4) > li >  div.col-xs-11.assignment-title-container > div > div > div:nth-child(2) > p > span.standard-gray-color.default-text.due-date.font-bold', el => el.map(e => e.innerText));
 	msg.edit(loading.setDescription('Successfully collected assignments...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
@@ -121,11 +121,9 @@ async function retrieveAssignmentsDueSoon(message, assignmentsArray) {
 	assignmentsArray = assignmentsArray.sort((a, b) => {
 		return Date.parse(a[1]) - Date.parse(b[1]);
 	});
-	assignmentsArray.forEach(e => {
-		e[1] = e[1].toLocaleString();
-	});
 	await page.close();
 	msg.edit(loading.setDescription('Cleaning up...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
+	await browser.close();
 	try {
 		await msg.delete();
 		instanceRun = false;
@@ -134,7 +132,6 @@ async function retrieveAssignmentsDueSoon(message, assignmentsArray) {
 		await message.channel.send(errorMessage.setDescription('A unexpected error occurred during cleaning up my messages (Do I have the permissions to delete my own messages?). Contact yum yum chicken yum yum#2288 or the server owner for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		instanceRun = false;
 	}
-	browser.close();
 }
 
 /* Retrieves All Assignments */
@@ -167,7 +164,7 @@ async function retrieveAllAssignments(message, assignmentsArray) {
 	try {
 		await page.click('#login-submit-btn');
 		console.log('Logging in....');
-		await page.waitForSelector('#iframewrapper > iframe');
+		await page.waitForSelector('#iframewrapper > iframe', { visible: true });
 		console.log('Successfully logged in!');
 		msg.edit(loading.setDescription('Successfully logged in...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 	}
@@ -178,13 +175,16 @@ async function retrieveAllAssignments(message, assignmentsArray) {
 	}
 	const elementHandle = await page.$('#iframewrapper > iframe');
 	const frame = await elementHandle.contentFrame();
-	await frame.waitForSelector('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(1) > button.menu-icon');
+	await frame.waitForSelector('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(1) > button.menu-icon', { visible: true });
 	await frame.focus('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(1) > button.menu-icon');
 	await frame.type('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(1) > button.menu-icon', '\n');
-	await frame.focus('#classesMenu > a');
-	await frame.type('#classesMenu > a', '\n');
-	await frame.focus('#classesMenu > ul > li:nth-child(4) > a', '\n');
-	await frame.click('#classesMenu > ul > li:nth-child(4) > a');
+	await frame.waitForSelector('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(4) > button', { visible: true });
+	await frame.focus('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(4) > button');
+	await frame.type('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(4) > button', '\n');
+	await frame.waitForSelector('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(4) > ul > li:nth-child(4) > a', { visible: true });
+	await frame.focus('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(4) > ul > li:nth-child(4) > a', '\n');
+	await frame.click('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(2) > ul > li:nth-child(4) > ul > li:nth-child(4) > a');
+	await frame.waitForSelector('#layoutWrapper > div > div > div > div.container-fluid.connect-assignment-container.connect-result-wrapper.set-aria-hidden > div > div > div.course-detail-wrapper > main > ul > li > div.col-xs-11.assignment-title-container > div > div > div:nth-child(1) > div.assignment-title.inner-column-left > h3', { visible: true });
 	const assignmentsList = await frame.$$eval('#layoutWrapper > div > div > div > div.container-fluid.connect-assignment-container.connect-result-wrapper.set-aria-hidden > div > div > div.course-detail-wrapper > main > ul > li > div.col-xs-11.assignment-title-container > div > div > div:nth-child(1) > div.assignment-title.inner-column-left > h3', el => el.map(e => e.innerText));
 	const dueDateList = await frame.$$eval('#layoutWrapper > div > div > div > div.container-fluid.connect-assignment-container.connect-result-wrapper.set-aria-hidden > div > div > div.course-detail-wrapper > main > ul > li > div.col-xs-11.assignment-title-container > div > div > div:nth-child(2) > p > span.standard-gray-color.default-text.due-date.font-bold', el => el.map(e => e.innerText));
 	msg.edit(loading.setDescription('Successfully collected assignments...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
@@ -208,11 +208,9 @@ async function retrieveAllAssignments(message, assignmentsArray) {
 	assignmentsArray = assignmentsArray.sort((a, b) => {
 		return Date.parse(a[1]) - Date.parse(b[1]);
 	});
-	assignmentsArray.forEach(e => {
-		e[1] = e[1].toLocaleString();
-	});
 	await page.close();
 	msg.edit(loading.setDescription('Cleaning up...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
+	await browser.close();
 	try {
 		await msg.delete();
 		instanceRun = false;
@@ -269,7 +267,7 @@ client.on('message', message => {
 			retrieveAllAssignments(message, allAssignments).then(() => {
 				if (allAssignments.length === 0) {
 					try {
-						message.channel.send(noAssignmentsDue.setTitle('Assignments Due in the Future').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
+						message.channel.send(noAssignmentsDue.setTitle('All Assignments').setDescription('There are no assignments due in the future.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
 					catch (error) {
 						message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
