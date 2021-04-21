@@ -44,6 +44,7 @@ const helpMenu = new discordjs.MessageEmbed()
 	.setFooter(process.env.class + '\nMade by yum yum chicken yum yum#2288')
 	.addFields(
 		{ name: '!connect soon', value: 'Gathers the assignments due in the next 7 days.' },
+		{ name: '!connect all', value: 'Gathers all assignments due in the future' },
 		{ name: '!connect/!connect help', value: 'Provides information about the bot' },
 	);
 
@@ -137,7 +138,7 @@ async function retrieveAssignmentsDueSoon(message, assignmentsArray) {
 async function retrieveAllAssignments(message, assignmentsArray) {
 	instanceRun = true;
 	console.log('Processing request for: ' + message.author.tag);
-	const browser = await puppeteer.launch({ headless: false });
+	const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
 	const msg = await message.channel.send(loading.setDescription('Starting up Connect instance...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 	const page = await browser.newPage();
 	try {
@@ -252,7 +253,7 @@ client.on('message', message => {
 			});
 		}
 	}
-	else if (message.content === '!connect future' && message.author.username != client.username && !instanceRun) {
+	else if (message.content === '!connect all' && message.author.username != client.username && !instanceRun) {
 		if (message.channel.name != 'bot-commands' && message.channel.name != 'bots') {
 			message.channel.send(errorMessage.setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
