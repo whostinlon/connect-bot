@@ -18,7 +18,6 @@
   "homepage": "https://github.com/whostinlon/connectbot#readme",
   "dependencies": {
     "discord.js": "^12.5.3",
-    "eslint": "^7.24.0",
     "puppeteer": "^8.0.0"
   }
 }
