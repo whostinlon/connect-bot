@@ -282,7 +282,7 @@ client.on('message', message => {
 			});
 		}
 	}
-	else if (message.content === '!connect soon' && message.author.username != client.username && instanceRun && (message.channel.name === 'bot-commands' || message.channel.name === 'bots')) {
+	else if ((message.content === '!connect soon' || message.content === '!connect all') && message.author.username != client.username && instanceRun && (message.channel.name === 'bot-commands' || message.channel.name === 'bots')) {
 		try {
 			message.channel.send(spamPrevent);
 		}
