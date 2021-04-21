@@ -121,6 +121,9 @@ async function retrieveAssignmentsDueSoon(message, assignmentsArray) {
 	assignmentsArray = assignmentsArray.sort((a, b) => {
 		return Date.parse(a[1]) - Date.parse(b[1]);
 	});
+	assignmentsArray.forEach(e => {
+		e[1] = e[1].toLocaleString();
+	});
 	await page.close();
 	msg.edit(loading.setDescription('Cleaning up...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 	try {
@@ -175,13 +178,13 @@ async function retrieveAllAssignments(message, assignmentsArray) {
 	}
 	const elementHandle = await page.$('#iframewrapper > iframe');
 	const frame = await elementHandle.contentFrame();
-	await frame.waitForSelector('#ember1591 > div > div:nth-child(1) > button');
-	await frame.focus('#ember1591 > div > div:nth-child(1) > button');
-	await frame.type('#ember1591 > div > div:nth-child(1) > button', '\n');
+	await frame.waitForSelector('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(1) > button.menu-icon');
+	await frame.focus('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(1) > button.menu-icon');
+	await frame.type('#layoutWrapper > nav > div:nth-child(1) > div:nth-child(1) > button.menu-icon', '\n');
 	await frame.focus('#classesMenu > a');
 	await frame.type('#classesMenu > a', '\n');
-	await frame.focus('#classes_126913595SubMenu > a', '\n');
-	await frame.click('#classes_126913595SubMenu > a');
+	await frame.focus('#classesMenu > ul > li:nth-child(4) > a', '\n');
+	await frame.click('#classesMenu > ul > li:nth-child(4) > a');
 	const assignmentsList = await frame.$$eval('#layoutWrapper > div > div > div > div.container-fluid.connect-assignment-container.connect-result-wrapper.set-aria-hidden > div > div > div.course-detail-wrapper > main > ul > li > div.col-xs-11.assignment-title-container > div > div > div:nth-child(1) > div.assignment-title.inner-column-left > h3', el => el.map(e => e.innerText));
 	const dueDateList = await frame.$$eval('#layoutWrapper > div > div > div > div.container-fluid.connect-assignment-container.connect-result-wrapper.set-aria-hidden > div > div > div.course-detail-wrapper > main > ul > li > div.col-xs-11.assignment-title-container > div > div > div:nth-child(2) > p > span.standard-gray-color.default-text.due-date.font-bold', el => el.map(e => e.innerText));
 	msg.edit(loading.setDescription('Successfully collected assignments...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
@@ -204,6 +207,9 @@ async function retrieveAllAssignments(message, assignmentsArray) {
 	});
 	assignmentsArray = assignmentsArray.sort((a, b) => {
 		return Date.parse(a[1]) - Date.parse(b[1]);
+	});
+	assignmentsArray.forEach(e => {
+		e[1] = e[1].toLocaleString();
 	});
 	await page.close();
 	msg.edit(loading.setDescription('Cleaning up...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
