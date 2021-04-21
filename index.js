@@ -224,14 +224,14 @@ client.once('ready', () => {
 
 /* Discord Command Handling */
 client.on('message', message => {
-	if (message.content == '!connect soon' && message.author.username != client.username && !instanceRun) {
+	if (message.content === '!connect soon' && message.author.username != client.username && !instanceRun) {
 		if (message.channel.name != 'bot-commands' && message.channel.name != 'bots') {
 			message.channel.send(errorMessage.setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
 		else {
 			const assignmentsDueSoon = [];
 			retrieveAssignmentsDueSoon(message, assignmentsDueSoon).then(() => {
-				if (assignmentsDueSoon.length == 0) {
+				if (assignmentsDueSoon.length === 0) {
 					try {
 						message.channel.send(noAssignmentsDue.setTitle('Assignments Due in the next 7 Days').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
@@ -252,7 +252,7 @@ client.on('message', message => {
 			});
 		}
 	}
-	else if (message.content == '!connect all' && message.author.username != client.username && !instanceRun) {
+	else if (message.content === '!connect future' && message.author.username != client.username && !instanceRun) {
 		if (message.channel.name != 'bot-commands' && message.channel.name != 'bots') {
 			message.channel.send(errorMessage.setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
@@ -260,7 +260,7 @@ client.on('message', message => {
 			const allAssignments = [];
 			instanceRun = false;
 			retrieveAllAssignments(message, allAssignments).then(() => {
-				if (allAssignments.length == 0) {
+				if (allAssignments.length === 0) {
 					try {
 						message.channel.send(noAssignmentsDue.setTitle('Assignments Due in the Future').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
@@ -281,7 +281,7 @@ client.on('message', message => {
 			});
 		}
 	}
-	else if (message.content == '!connect soon' && message.author.username != client.username && instanceRun && (message.channel.name == 'bot-commands' || message.channel.name == 'bots')) {
+	else if (message.content === '!connect soon' && message.author.username != client.username && instanceRun && (message.channel.name === 'bot-commands' || message.channel.name === 'bots')) {
 		try {
 			message.channel.send(spamPrevent);
 		}
@@ -289,8 +289,8 @@ client.on('message', message => {
 			message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
 	}
-	else if (message.content == '!connect help' || message.content == '!connect' && message.author.username != client.username) {
-		if (message.channel.name == 'bot-commands' || message.channel.name == 'bots') {
+	else if (message.content === '!connect help' || message.content === '!connect' && message.author.username != client.username) {
+		if (message.channel.name === 'bot-commands' || message.channel.name === 'bots') {
 			try {
 				message.channel.send(helpMenu);
 			}
@@ -302,8 +302,8 @@ client.on('message', message => {
 			message.channel.send(errorMessage.setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
 	}
-	else if (message.content.split(' ')[0] == '!connect') {
-		if (message.channel.name == 'bot-commands' || message.channel.name == 'bots') {
+	else if (message.content.split(' ')[0] === '!connect') {
+		if (message.channel.name === 'bot-commands' || message.channel.name === 'bots') {
 			message.channel.send(errorMessage.setTitle('Unknown Command').setDescription('I don\'t know what to do from here. Please refer to !connect help for more information.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
 		else {
