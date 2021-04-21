@@ -121,6 +121,9 @@ async function retrieveAssignmentsDueSoon(message, assignmentsArray) {
 	assignmentsArray = assignmentsArray.sort((a, b) => {
 		return Date.parse(a[1]) - Date.parse(b[1]);
 	});
+	assignmentsArray.forEach(e => {
+		e[1] = `** ${e[1]} **`;
+	});
 	await page.close();
 	msg.edit(loading.setDescription('Cleaning up...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 	await browser.close();
@@ -208,6 +211,9 @@ async function retrieveAllAssignments(message, assignmentsArray) {
 	assignmentsArray = assignmentsArray.sort((a, b) => {
 		return Date.parse(a[1]) - Date.parse(b[1]);
 	});
+	assignmentsArray.forEach(e => {
+		e[1] = `** ${e[1]} **`;
+	});
 	await page.close();
 	msg.edit(loading.setDescription('Cleaning up...').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 	await browser.close();
@@ -238,19 +244,23 @@ client.on('message', message => {
 			retrieveAssignmentsDueSoon(message, assignmentsDueSoon).then(() => {
 				if (assignmentsDueSoon.length === 0) {
 					try {
-						message.channel.send(noAssignmentsDue.setTitle('Assignments Due in the next 7 Days').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
+						console.log('Sending embed message (noAssignmentsDue) in channel.');
+						message.channel.send(noAssignmentsDue.setTitle('Assignments Due in the next 7 Days').setDescription('There are no assignments due in the next 7 days.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
 					catch (error) {
+						console.error('An unexpected error occurred with message output: ' + error.message);
 						message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
 				}
 				else {
 					try {
+						console.log('Sending embed message (assignmentsDue) in channel.');
 						message.channel.send(assignmentsDue.setTitle('Assignments Due in the next 7 Days').setDescription(assignmentsDueSoon.map(e => {
 							return assignmentsDueSoon[assignmentsDueSoon.indexOf(e)].join(' · ');
 						}).join('\n')).setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
 					catch (error) {
+						console.error('An unexpected error occurred with message output: ' + error.message);
 						message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
 				}
@@ -267,19 +277,23 @@ client.on('message', message => {
 			retrieveAllAssignments(message, allAssignments).then(() => {
 				if (allAssignments.length === 0) {
 					try {
+						console.log('Sending embed message (noAssignmentsDue) in channel.');
 						message.channel.send(noAssignmentsDue.setTitle('All Assignments').setDescription('There are no assignments due in the future.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
 					catch (error) {
+						console.error('An unexpected error occurred with message output: ' + error.message);
 						message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
 				}
 				else {
 					try {
+						console.log('Sending embed message (assignmentsDue) in channel.');
 						message.channel.send(assignmentsDue.setTitle('All Future Assignments').setDescription(allAssignments.map(e => {
 							return allAssignments[allAssignments.indexOf(e)].join(' · ');
 						}).join('\n')).setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
 					catch (error) {
+						console.error('An unexpected error occurred with message output: ' + error.message);
 						message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 					}
 				}
@@ -291,6 +305,7 @@ client.on('message', message => {
 			message.channel.send(spamPrevent);
 		}
 		catch (error) {
+			console.error('An unexpected error occurred with message output: ' + error.message);
 			message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
 	}
@@ -300,10 +315,12 @@ client.on('message', message => {
 				message.channel.send(helpMenu);
 			}
 			catch (error) {
+				console.error('An unexpected error occurred with message output: ' + error.message);
 				message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 			}
 		}
 		else {
+			console.log('This is not a channel I belong in! Sending error message.');
 			message.channel.send(errorMessage.setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
 	}
