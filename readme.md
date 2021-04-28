@@ -12,7 +12,7 @@ This bot makes it easier for students to check upcoming assignments on the popul
 
 This bot was meant to be hosted on Heroku or another cloud hosting service. If you want to host this bot locally, replace the process.env variables with your token, email, password, and the class(es) you are currently taking.
 
-**The bot also requires the permissions to manage messages on whichever server it is put on.**\
+**The bot also requires the permissions to manage messages on whichever server it is put on.**
 
 ## Bot Preview
 
