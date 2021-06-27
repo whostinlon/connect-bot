@@ -48,9 +48,9 @@ const helpMenu = new discordjs.MessageEmbed()
 	.setTimestamp(moment())
 	.setFooter(process.env.class + '\nMade by yum yum chicken yum yum#2288')
 	.addFields(
-		{ name: '!connect soon', value: 'Gathers the assignments due in the next 7 days.' },
-		{ name: '!connect all', value: 'Gathers all assignments due in the future' },
-		{ name: '!connect/!connect help', value: 'Provides information about the bot' },
+		{ name: '/connect soon', value: 'Gathers the assignments due in the next 7 days.' },
+		{ name: '/connect all', value: 'Gathers all assignments due in the future' },
+		{ name: '/connect or /connect help', value: 'Provides information about the bot' },
 	);
 
 const spamPrevent = new discordjs.MessageEmbed()
@@ -165,12 +165,12 @@ async function retrieveAssignments(message, assignmentsArray, proximity) {
 /* Discord Login and Setup */
 client.login(process.env.token);
 client.once('ready', () => {
-	client.user.setPresence({ activity: { name: 'for !connect', type: 'WATCHING' }, status: 'dnd' });
+	client.user.setPresence({ activity: { name: 'for /connect', type: 'WATCHING' }, status: 'dnd' });
 });
 
 /* Discord Command Handling */
 client.on('message', message => {
-	if (message.content === '!connect soon' && message.author.username != client.username && !instanceRun) {
+	if (message.content === '/connect soon' && message.author.username != client.username && !instanceRun) {
 		if (message.channel.name != 'bot-commands' && message.channel.name != 'bots') {
 			message.channel.send(errorMessage.setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
@@ -202,7 +202,7 @@ client.on('message', message => {
 			});
 		}
 	}
-	else if (message.content === '!connect all' && message.author.username != client.username && !instanceRun) {
+	else if (message.content === '/connect all' && message.author.username != client.username && !instanceRun) {
 		if (message.channel.name != 'bot-commands' && message.channel.name != 'bots') {
 			message.channel.send(errorMessage.setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
@@ -235,7 +235,7 @@ client.on('message', message => {
 			});
 		}
 	}
-	else if ((message.content === '!connect soon' || message.content === '!connect all') && message.author.username != client.username && instanceRun && (message.channel.name === 'bot-commands' || message.channel.name === 'bots')) {
+	else if ((message.content === '/connect soon' || message.content === '/connect all') && message.author.username != client.username && instanceRun && (message.channel.name === 'bot-commands' || message.channel.name === 'bots')) {
 		try {
 			message.channel.send(spamPrevent);
 		}
@@ -244,7 +244,7 @@ client.on('message', message => {
 			message.channel.send(errorMessage.setDescription('A unexpected error occurred during message output. Contact yum yum chicken yum yum#2288 for help.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
 	}
-	else if (message.content === '!connect help' || message.content === '!connect' && message.author.username != client.username) {
+	else if (message.content === '/connect help' || message.content === '/connect' && message.author.username != client.username) {
 		if (message.channel.name === 'bot-commands' || message.channel.name === 'bots') {
 			try {
 				message.channel.send(helpMenu);
@@ -259,9 +259,9 @@ client.on('message', message => {
 			message.channel.send(errorMessage.setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
 	}
-	else if (message.content.split(' ')[0] === '!connect') {
+	else if (message.content.split(' ')[0] === '/connect') {
 		if (message.channel.name === 'bot-commands' || message.channel.name === 'bots') {
-			message.channel.send(errorMessage.setTitle('Unknown Command').setDescription('I don\'t know what to do from here. Please refer to !connect help for more information.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
+			message.channel.send(errorMessage.setTitle('Unknown Command').setDescription('I don\'t know what to do from here. Please refer to /connect help for more information.').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
 		}
 		else {
 			message.channel.send(errorMessage.setTitle('Error').setDescription('This doesn\'t seem to be a channel for bots. Are you in the right channel? I can only be used in channels named #bot-commands or #bots').setFooter(process.env.class + '\nRequested by: ' + message.author.tag));
